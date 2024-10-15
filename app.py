@@ -21,6 +21,14 @@ with app.app_context():
 
 
 def get_cover_image(isbn):
+    """Fetch the cover image URL for a book using its ISBN.
+
+        Args:
+            isbn (str): The ISBN of the book.
+
+        Returns:
+            str: The URL of the book's cover image if found, otherwise None.
+    """
     url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}"
     response = requests.get(url)
 
@@ -34,6 +42,10 @@ def get_cover_image(isbn):
 
 @app.route('/')
 def home():
+    """Render the home page, displaying a list of books and authors.
+
+    The list can be sorted by title or author based on user input.
+    """
     sort_by = request.args.get('sort')
     if sort_by == 'title':
         books = Book.query.order_by(Book.title).all()  # Sort by title
@@ -50,6 +62,11 @@ def home():
 
 @app.route('/add_author', methods=['GET', 'POST'])
 def add_author():
+    """Handle the addition of a new author.
+
+    GET: Render the form for adding a new author.
+    POST: Process the submitted form to add the author to the database.
+    """
     if request.method == 'POST':
         name = request.form['name']
         birthdate_string = request.form['birthdate']
@@ -79,6 +96,11 @@ def add_author():
 
 @app.route('/add_book', methods=['GET', 'POST'])
 def add_book():
+    """Handle the addition of a new book.
+
+    GET: Render the form for adding a new book.
+    POST: Process the submitted form to add the book to the database.
+    """
     if request.method == 'POST':
         isbn = request.form['isbn']
         title = request.form['title']
@@ -106,6 +128,10 @@ def add_book():
 
 @app.route('/search', methods=['POST'])
 def search():
+    """Search for books based on a query string.
+
+    The search checks both book titles and author names for matches.
+    """
     query = request.form['query']
     if query:
         books = Book.query.filter(
@@ -120,6 +146,10 @@ def search():
 
 @app.route('/book/<int:book_id>/delete', methods=['POST'])
 def delete_book(book_id):
+    """Delete a specific book by its ID.
+
+    If the author has no other books left, the author is also deleted.
+    """
     book = Book.query.get_or_404(book_id)
     author_id = book.author_id  # Store the author_id before deleting the book
 

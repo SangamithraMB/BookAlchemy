@@ -5,6 +5,15 @@ db = SQLAlchemy()
 
 
 class Author(db.Model):
+    """Model representing an author in the library.
+
+    Attributes:
+        id (int): Unique identifier for the author.
+        name (str): Name of the author.
+        birth_date (date): Birth date of the author.
+        date_of_death (date): Date of death of the author.
+        books (list): List of books associated with the author.
+    """
     __tablename__ = 'authors'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -22,6 +31,17 @@ class Author(db.Model):
 
 
 class Book(db.Model):
+    """Model representing a book in the library.
+
+        Attributes:
+            id (int): Unique identifier for the book.
+            isbn (str): ISBN number of the book.
+            title (str): Title of the book.
+            publication_year (int): Year the book was published.
+            author_id (int): Foreign key referencing the author's ID.
+            cover_image_url (str): URL for the book's cover image.
+            author (Author): The author associated with the book.
+        """
     __tablename__ = 'books'
 
     id = db.Column(db.Integer, primary_key=True)
